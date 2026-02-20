@@ -63,7 +63,9 @@ public class MemberService {
         MemberEntity member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("회원이 존재하지 않습니다."));
 
-        if(memberRepository.existsByEmail(dto.getEmail())) {
+        //기존 메일주소와 수정된 메일주소가 다르면서 기존 이메일이 존재하면
+        if(!member.getEmail().equals(dto.getEmail()) &&
+                memberRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
 

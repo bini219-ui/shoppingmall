@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +36,9 @@ public class MemberEntity {
     private String address; //주소
     @Column(nullable = false, updatable = false)
     @CreatedDate    //생성할 때만 등록
-    private LocalDateTime createdAt;    //가입일자
+    private LocalDate createdAt;    //가입일자
     @LastModifiedDate   //마지막 수정일자 등록
-    private LocalDateTime updatedAt;    //수정일자
+    private LocalDate updatedAt;    //수정일자
     @Column(length = 20, nullable = false)
     @Builder.Default    //builder 사용 시 기본값
     private String status = "ACTIVE";   //회원상태 - 활성(ACTIVE), 비활성(INACTIVE), 삭제(DELETED)

@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.beans.ExceptionListener;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +40,9 @@ public class ProductEntity {
     private String imageUrl;   //이미지파일
     @Column(nullable = false, updatable = false)
     @CreatedDate
-    private LocalDateTime createdAt;  //등록날짜
+    private LocalDate createdAt;  //등록날짜
     @LastModifiedDate
-    private LocalDateTime updatedAt;  //수정날짜
+    private LocalDate updatedAt;  //수정날짜
     @Column(length = 20, nullable = false)
     @Builder.Default
     private String status="AVAILABLE"; //상품상태 - 판매중(AVAILABLE), 소진(SOLD_OUT), 할인(DISCOUNTINUED)
