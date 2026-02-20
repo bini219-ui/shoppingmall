@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,7 +29,7 @@ public class CartEntity {
     private Integer quantity=1;  //수량
     @Column(nullable = false, updatable = false)
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     //이용할 부모테이블 지정
     //회원테이블과 연관(하나의 회원은 여러 장바구니에 존재 가능)
