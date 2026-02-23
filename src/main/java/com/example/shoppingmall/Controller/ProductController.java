@@ -2,6 +2,7 @@ package com.example.shoppingmall.Controller;
 
 import com.example.shoppingmall.DTO.ProductDTO;
 import com.example.shoppingmall.Service.ProductService;
+import jdk.jfr.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,7 +68,7 @@ public class ProductController {
     public String updateProduct(@PathVariable Long id, ProductDTO productDTO) {
         try {
             productService.updatedProduct(id, productDTO);
-            return "redirect:/products" + id;
+            return "redirect:/products/" + id;
         } catch (IllegalArgumentException e) {
             return "redirect:/products/edit/" + id + "?error=" + e.getMessage();
         }
@@ -79,9 +80,18 @@ public class ProductController {
         productService.deleteProduct(id);
         return "redirect:/products";
     }
-    
+
+    //카테고리별 상품 조회
+    @GetMapping("/category/{category}")
+    public String getProductsByCategory(@PathVariable String category, Model model) {
+        List<ProductDTO> products = productService.getProductsByCategory(category);
+        model.addAttribute("products", products);
+        model.addAttribute("category", category);
+        return "product/list";
+    }
+
     //다양한 검색을 통한 조회
-    //상품 검생
+    //상품 검색
     @GetMapping("/search")  //keyword 오류 발생 시 @requestParam을 붙인다.
     public String searchProducts(String keyword, Model model) {
         List<ProductDTO> products = productService.searchProducts(keyword);
@@ -101,7 +111,7 @@ public class ProductController {
     }
     
     //재고 있는 상품만 조회
-    @GetMapping("available")
+    @GetMapping("/available")
     public String getAvailableProducts(Model model) {
         List<ProductDTO> products = productService.getavailableProducts();
         model.addAttribute("products", products);
