@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.beans.ExceptionListener;
 import java.math.BigDecimal;
@@ -18,7 +19,7 @@ import java.util.List;
 @ToString(exclude = "carts") @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EntityListeners(AutoCloseable.class)
+@EntityListeners(AuditingEntityListener.class)
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +46,7 @@ public class ProductEntity {
     private LocalDate updatedAt;  //수정날짜
     @Column(length = 20, nullable = false)
     @Builder.Default
-    private String status="AVAILABLE"; //상품상태 - 판매중(AVAILABLE), 소진(SOLD_OUT), 할인(DISCOUNTINUED)
+    private String status="AVAILABLE"; //상품상태 - 판매중(AVAILABLE), 소진(SOLD_OUT), 단종(DISCONTINUED)
 
     //자식테이블과의 관계
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
