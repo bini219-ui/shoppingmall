@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:object-fit="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -124,13 +124,117 @@
                         th:text="${product.name}">상품명</a></li>
                     <li class="breadcrumb-item">재고 관리</li>
                 </ol>
-            </div>
-
-            <div class="row justify-content-center">
-                <div class="col-lg-10">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-boxes"></i> 상품 재고 관리
+                <!--재고관리 작업 시 발생할 수 있는 메세지 처리-->
+                <!--작업 실패 메세지-->
+                <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                th:if="${param.error}">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <span th:text="${param.error}">오류가 발생했습니다.</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <!--성공 시 메세지-->
+                <div class="alert alert-success alert-dismissible fade show" role="alert"
+                th:if="${param.success}">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span>성공적으로 적용되었습니다.</span>
+                    <button type="button" class="btn btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <!--재고 현황-->
+                <div class="row">
+                    <div class="col-lg-4 mb-4">
+                        <div class="current-stock-display text-center mb-4">
+                            <div class="mb-2">
+                                <img th:src="${#strings.isEmpty(product.imageUrl)?'/images/no-image.png':product.imageUrl}"
+                                style="width: 80px;" height="80px;" object-fit: cover; border="radius:12px;">
+                            </div>
+                            <h5 class="mb-1 fw-bold" th:text="${product.name}">상품명</h5>
+                            <small class="opacity-75" th:text="'카테고리: '+${product.category}">카테고리</small>
+                            <hr style="border-color:rgba(255,255,255,0.3);">
+                            <div class="stock-badge" th:text="${product.stockQuantity}+' 개'" id="currentStockDisplay">개</div>
+                            <div class="mt-1 opacity-75">현재 재고</div>
+                            <div class="mt-3">
+                                <span class="badge bg-success" th:if="${product.status=='AVAILABLE'}">판매중</span>
+                                <span class="badge bg-danger" th:if="${product.status=='SOLD_OUT'}">품절</span>
+                                <span class="badge bg-secondary" th:if="${product.status=='DISCONTINUED'}">단종</span>
+                            </div>
+                        </div>
+                        <!--상품 기본 정보-->
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <i class="fas fa-info-circle me-1"></i> 상품 정보
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table table-sm mb-0">
+                                    <tr>
+                                        <td class="text-muted ps-3">상품 ID</td>
+                                        <td class="fw-bold" th:text="${product.id}">1</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted ps-3">판매가</td>
+                                        <td class="fw-bold text-primary"
+                                            th:text="${#numbers.formatDecimal(product.price,0,'COMMA',0,'POINT')}+'원'">1000원</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted ps-3">장바구니 담긴 수</td>
+                                        <td class="badge bg-primary" th:text="${product.cartCount}+'회'">3</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!--재고 조정 폼-->
+                    <div class="col-lg-8">
+                        <div class="row">
+                            <div class="col-md-6 mb-4"> <!--재고 증가-->
+                                <div class="card stock-card increase h-100">
+                                    <div class="card-header bg-success bg-opacity-10 text-success">
+                                        <i class="fas fa-arrow-up me-1"></i>
+                                        <strong>재고 증가</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="text-muted small mb-3">입고, 반품 등으로 재고를 추가할 때 사용합니다.</p>
+                                        <form th:action="@{/products/stock/increase/{id}(id=${product.id})}"
+                                              method="post">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">증가 수량</label>
+                                                <input type="number" class="form-control" id="increaseQty" name="quantity"
+                                                       value="1" min="1" max="9999" required>
+                                            </div>
+                                            <div class="d-grid">
+                                                <button type="submit" class="btn btn-success"
+                                                        onclick="return confirm('재고를 증가하시겠습니까?')">
+                                                    <i class="fas fa-arrow-up me-1"></i> 재고 증가 적용
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4"> <!--재고 감소-->
+                                <div class="card stock-card decrease h-100">
+                                    <div class="card-header bg-danger bg-opacity-10 text-danger">
+                                        <i class="fas fa-arrow-down me-1"></i>
+                                        <strong>재고 감소</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="text-muted small mb-3">판매, 파손, 재고 조정 등으로 재고를 차감할 때 사용합니다.</p>
+                                        <form th:action="@{/products/stock/decrease/{id}(id=${product.id})}"
+                                              method="post">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">감소 수량</label>
+                                                <input type="number" class="form-control" id="decreaseQty" name="quantity"
+                                                       value="1" min="1" max="9999" required>
+                                            </div>
+                                            <div class="d-grid">
+                                                <button type="submit" class="btn btn-danger"
+                                                        onclick="return confirm('재고를 감소하시겠습니까?')">
+                                                    <i class="fas fa-arrow-down me-1"></i> 재고 감소 적용
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

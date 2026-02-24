@@ -142,7 +142,7 @@
                                 <td th:text="${#temporals.format(product.createdAt, 'yyyy-MM-dd')}">2026-01-07</td>
                                 <td>
                                     <span th:if="${product.status=='AVAILABLE'}" class="badge bg-success">판매중</span>
-                                    <span th:if="${product.status=='SOLD_OUT'}" class="badge bg-warning">품절</span>
+                                    <span th:if="${product.status=='SOLD_OUT'}" class="badge bg-danger">품절</span>
                                     <span th:if="${product.status=='DISCONTINUED'}" class="badge bg-secondary">단종</span>
                                 </td>
                                 <td> <!--작업버튼(상세보기, 수정, 재고관리, 삭제)-->

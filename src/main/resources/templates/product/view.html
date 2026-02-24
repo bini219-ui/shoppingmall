@@ -149,7 +149,7 @@
                                                 <th class="table-light">상태</th>
                                                 <td>
                                                     <span th:if="${product.status=='AVAILABLE'}" class="badge bg-success">판매중</span>
-                                                    <span th:if="${product.status=='SOLD_OUT'}" class="badge bg-warning">품절</span>
+                                                    <span th:if="${product.status=='SOLD_OUT'}" class="badge bg-danger">품절</span>
                                                     <span th:if="${product.status=='DISCONTINUED'}" class="badge bg-secondary">단종</span>
                                                 </td>
                                             </tr>
