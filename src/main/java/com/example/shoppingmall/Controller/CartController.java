@@ -68,10 +68,32 @@ public class CartController {
     }
 
     //장바구니 수량 증가
-
+    @PostMapping("/increase/{id}")
+    public String increaseQuantity(@PathVariable Long id, @RequestParam Long memberId) {
+        try {
+            CartDTO cart = cartService.getCart(id);
+            cartService.updateQuantity(id, cart.getQuantity()+1);
+            return "redirect:/cart/"+memberId;
+        } catch (IllegalStateException e) {
+            return "redirect:/cart/"+memberId+"?error="+e.getMessage();
+        }
+    }
 
     //장바구니 수량 감소
-
+    @PostMapping("/decrease/{id}")
+    public String decreaseQuantity(@PathVariable Long id, @RequestParam Long memberId) {
+        try {
+            CartDTO cart = cartService.getCart(id);
+            if (cart.getQuantity()>1) {
+                cartService.updateQuantity(id, cart.getQuantity() - 1);
+            } else {
+                cartService.deleteCart(id);
+            }
+            return "redirect:/cart/"+memberId;
+        } catch (IllegalStateException e) {
+            return "redirect:/cart/"+memberId+"?error="+e.getMessage();
+        }
+    }
 
     //장바구니 항목 개수 조회(ajax)
 

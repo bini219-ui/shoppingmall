@@ -178,7 +178,7 @@
                                             <form th:action="@{/cart/add}" method="post" class="row g-3 aling-items-end">
                                                 <div class="col-md-4"> <!--구매자 id-->
                                                     <label class="form-label fw-bold">회원 ID</label>
-                                                    <input class="form-control" type="number" name="numberId"
+                                                    <input class="form-control" type="number" name="memberId" min="1"
                                                            placeholder="회원 ID 입력" required>
                                                     <div class="form-text">장바구니에 담을 회원의 ID를 입력하세요.</div>
                                                 </div>
